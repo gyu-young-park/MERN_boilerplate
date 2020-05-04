@@ -123,3 +123,82 @@ node_modules를 넣을 필요가 없다
 git rm --cached node_modules -r
 ```
 
+이렇게 지워주면 된다.
+
+```
+git commit -m ""
+```
+을 하고난 뒤에 git status를 해주면 아무것도 없다.
+이제 staging area에 있던게 git repo(local)에 들어가는 것이다.
+이제 remote에 올려야한다.
+
+11, github에 올리기
+git은 tool이다. 소스코드를 관리하는 툴이다.
+git으로 관리하는 코드를 많은 사람들과 수정, 관리할 수 있도록 해주는 클라우드 서비스가 github이다.
+
+github -> 아이디가 있어야 한다.
+
+원격 저장소를 만들고, 여기에 있는 코드들을 쓰면 된다.
+그런데, 에러가 난다??
+ssh(secure shell)을 설정해야한다.
+이는 local git과 github가 안전하게 통신할 방법이 없기 때문이다.
+그래서 ssh를 설정해야 한다.
+
+없다면 구글에 git ssh라고 친다.
+
+먼저 ssh를 만들고,
+generating -> ssh
+
+ssh 키를 만들었다면, ssh agent를 백그라운드에 켜주면 된다.
+id_rsa => priavete key
+id_rsa_pub => public key
+
+이제 pub key를 github에 연결해야한다.
+계정의 setting에 가서 설정해주면 된다.
+
+그 다음 이제 git 코드를 입력해주면 소스가 배포된다.
+
+12, 회원가입 기능 만들기
+클라이언트(브라우저) -> 서버로 정보를 보낸다.
+받을 때, body-parser라는 dependecy가 필요하다.
+이름, 이메일, 비번 등을 받을 수 있다.
+
+```
+npm install body-parser --save
+```
+
+postman으로 클라이언트를 대신해 테스트를 해보도록 하자
+
+다음으로 register router를 만들자 -> 회원 가입을 위한 라우터
+require 후에 다음의 처리를 해주어야 한다.
+```
+//application/x-www-form-urlencoded 이런 타입으로 오는 것을 분석할 수 있도록
+app.use(bodyParser.urlencoded({extended: true}))
+//application/json 타입으로 오는 것을 분석할 수 있도록 한다.
+app.use(bodyParser.json())
+```
+
+13, nodemon
+서버를 내리지 않고, 서버를 킨 상태에서 변화를 감지해 코드 변화를 적용하는 기술
+```
+npm install nodemon --save-dev
+```
+dev를 붙이면 local -> development모드에서만 사용하도록 하겠다는 것이다.
+
+14, 소스안에 있는 비밀정보 보호하기
+가령 mongodb 연결에 있어서 아이디와 비밀번호가 노출되는 것을 막기위한 것
+다른 곳으로 따로 떼어놓고 gitignore에 추가하도록 하자
+
+config 폴더 -> dev.js 에다가 몽고db uri를 옮겨주자
+
+우리가 개발할 때 두가지 환경에서 가능
+local, production
+이는 배포 전 후로 나뉜다.
+
+이 두 가지 경우를 따로 생각해야 한다.
+dev모드일 때는 config에서 가져올 수 있다.
+그런데, deploy모드에서는 따로 설정해주어야 한다
+heroku일 경우는 heroku에서 따로 설정해주어야 한다.
+
+그래서 prod.js를 따로 하나 더 만들어주어 prod, dev 모드일 때의 경우를 다르게 해주자
+또한, 한 가지 더 파일을 만드는데, key.js를 만들어주도록 하자
